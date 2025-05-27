@@ -5,6 +5,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,14 +23,20 @@ use App\Http\Controllers\OwnerController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout');
+
 
 Route::middleware('auth')->group(function () {
-    Route::get('/admin', fn() => 'Admin Dashboard');
-    Route::get('/owner', fn() => 'Owner Dashboard');
+    Route::get('/dashboard/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     Route::get('/transaksi', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
@@ -44,4 +53,6 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->group(function () {
     Route::get('/riwayat', [OwnerController::class, 'riwayat'])->name('owner.riwayat');
 });
 
-
+// Route::middleware(['auth', 'role:owner'])->group(function () {
+//     Route::resource('/admin', AdminController::class);
+// });

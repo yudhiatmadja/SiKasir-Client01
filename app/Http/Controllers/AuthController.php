@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Http\Controllers\DashboardController;
+
 
 class AuthController extends Controller
 {
@@ -13,26 +15,26 @@ class AuthController extends Controller
     return view('auth.login');
 }
 
-public function login(Request $request) {
-    $request->validate([
-        'username' => 'required',
-        'password' => 'required',
-    ]);
+public function login(Request $request)
+{
+    $credentials = $request->only('username', 'password');
 
-    $user = User::where('username', $request->username)->first();
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return back()->withErrors(['login' => 'Username atau password salah']);
+        if ($user->role === 'owner') {
+            return redirect()->route('owner.dashboard');
+        } elseif ($user->role === 'admin') {
+            return redirect()->route('dashboard');
+        } else {
+            Auth::logout();
+            return back()->withErrors(['username' => 'Role tidak dikenali.']);
+        }
     }
 
-    Auth::login($user);
-
-    if ($user->role === 'owner') {
-        return redirect('/owner');
-    } else {
-        return redirect('/admin');
-    }
+    return back()->withErrors(['username' => 'Username atau password salah.']);
 }
+
 
 public function logout() {
     Auth::logout();

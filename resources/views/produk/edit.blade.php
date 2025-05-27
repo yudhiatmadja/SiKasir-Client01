@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section("content")
 <h2>Edit Produk</h2>
 <form method="POST" action="{{ route('produk.update', $produk->id) }}" enctype="multipart/form-data">
     @csrf @method('PUT')
@@ -11,3 +14,4 @@
     @endif
     <button type="submit">Update</button>
 </form>
+@endsection

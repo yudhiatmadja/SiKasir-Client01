@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Input Transaksi</title>
-    <style>
-        table, th, td { border: 1px solid #ddd; padding: 10px; border-collapse: collapse; }
-    </style>
-</head>
-<body>
+@extends('layouts.app')
+
+@section("content")
     <h2>Transaksi Penjualan</h2>
     @if (session('success')) <p>{{ session('success') }}</p> @endif
 
@@ -33,5 +27,4 @@
 
         <button type="submit">Simpan Transaksi</button>
     </form>
-</body>
-</html>
+@endsection

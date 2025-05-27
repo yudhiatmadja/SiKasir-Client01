@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+
+@section("content")
 <h2>Tambah Produk</h2>
 <form method="POST" action="{{ route('produk.store') }}" enctype="multipart/form-data">
     @csrf
@@ -8,3 +12,4 @@
     Foto: <input type="file" name="foto"><br>
     <button type="submit">Simpan</button>
 </form>
+@endsection
