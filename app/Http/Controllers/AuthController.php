@@ -22,18 +22,19 @@ public function login(Request $request)
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
 
-        if ($user->role === 'owner') {
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->role === 'owner') {
             return redirect()->route('owner.dashboard');
-        } elseif ($user->role === 'admin') {
-            return redirect()->route('dashboard');
         } else {
             Auth::logout();
-            return back()->withErrors(['username' => 'Role tidak dikenali.']);
+            return redirect()->route('login')->withErrors(['role' => 'Role tidak dikenali.']);
         }
     }
 
-    return back()->withErrors(['username' => 'Username atau password salah.']);
+    return back()->withErrors(['login' => 'Username atau password salah.']);
 }
+
 
 
 public function logout() {

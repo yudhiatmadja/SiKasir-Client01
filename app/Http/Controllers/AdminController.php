@@ -35,7 +35,7 @@ class AdminController extends Controller
             'role'     => 'admin',
         ]);
 
-        return redirect()->route('admin.index')->with('success', 'Admin berhasil ditambahkan');
+        return redirect()->route('admin.dashboard')->with('success', 'Admin berhasil ditambahkan');
     }
 
     public function edit(User $admin)

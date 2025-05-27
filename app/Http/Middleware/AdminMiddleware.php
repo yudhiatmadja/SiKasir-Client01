@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 
-class OwnerMiddleware
+class AdminMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,8 @@ class OwnerMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!Auth::check() || Auth::user()->role !== 'owner') {
-            abort(403, 'Akses ditolak. Hanya owner yang dapat mengakses halaman ini.');
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Akses ditolak. Hanya admin yang dapat mengakses halaman ini.');
         }
 
         return $next($request);
