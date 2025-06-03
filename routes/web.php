@@ -15,7 +15,9 @@ Route::get('/', function () {
 
 // Auth
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 Route::post('/logout', function () {
     Auth::logout();
     return redirect('/login');
@@ -24,8 +26,13 @@ Route::post('/logout', function () {
 // Authenticated users
 Route::middleware('auth')->group(function () {
     // Transaksi & Produk
-    Route::get('/transaksi', [TransaksiController::class, 'create'])->name('transaksi.create');
+    Route::get('/transaksi', [TransaksiController::class, 'index'])->name('transaksi.index');
+    Route::get('/transaksi/create', [TransaksiController::class, 'create'])->name('transaksi.create');
     Route::post('/transaksi', [TransaksiController::class, 'store'])->name('transaksi.store');
+    Route::get('/transaksi/{transaksi}/confirm', [TransaksiController::class, 'show_confirm']);
+    Route::get('/transaksi/{transaksi}/delete', [TransaksiController::class, 'destroy']);
+    Route::get('/transaksi/{transaksi}/edit', [TransaksiController::class, 'edit']);
+    Route::post('/transaksi/{transaksi}', [TransaksiController::class, 'update']);
     Route::resource('produk', ProdukController::class);
 });
 
@@ -48,4 +55,12 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->name('owner.')->group(fun
     Route::get('/grafik', [OwnerController::class, 'grafik'])->name('grafik');
     Route::get('/stok', [OwnerController::class, 'stok'])->name('stok');
     Route::get('/riwayat', [OwnerController::class, 'riwayat'])->name('riwayat');
+    Route::get('/riwayat/filter', [OwnerController::class, 'riwayat_filter']);
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::post('/', [AdminController::class, 'store'])->name('admin.store');
+    Route::get('/admin/{admin}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::put('/admin/{admin}', [AdminController::class, 'update'])->name('admin.update');
+    Route::delete('/admin/{admin}', [AdminController::class, 'destroy'])->name('admin.destroy');
 });

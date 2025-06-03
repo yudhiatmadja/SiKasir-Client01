@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -14,9 +17,12 @@ class DashboardController extends Controller
 
     public function index()
     {
-        $admins = User::where('role', 'admin')->orderBy('name')->get();
+        // $admins = User::where('role', 'admin')->orderBy('name')->get();
+        $hariIni = Carbon::today();
+        $transaksiHariIni = Transaksi::whereDate('created_at', $hariIni)->where("user_id", Auth::user()->id)->count();
+        $pendapatan = Transaksi::whereDate('created_at', $hariIni)->where('user_id', Auth::user()->id)->sum('total_harga');
 
-        return view('admin.index', compact('admins'));
+        return view('dashboard_admin.index', compact('transaksiHariIni', 'pendapatan'));
     }
 
     public function create()

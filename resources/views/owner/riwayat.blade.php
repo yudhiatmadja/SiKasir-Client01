@@ -93,34 +93,38 @@
         <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 mb-8">
             <h2 class="text-lg font-semibold text-gray-900 mb-4">Filter & Pencarian</h2>
             <div class="flex flex-col md:flex-row gap-4">
-                <div class="flex-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian Admin</label>
-                    <div class="relative">
-                        <input type="text" placeholder="Cari nama admin..." class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
+                {{-- <form action="{{ url('/', []) }}" method="post"> --}}
+                    @csrf
+
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pencarian Admin</label>
+                        <div class="relative">
+                            <input type="text" placeholder="Cari nama admin..." class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white" name="admin_filter" onchange="filters()">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="flex-1">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Rentang Tanggal</label>
-                    <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white">
-                        <option value="">📅 Semua Waktu</option>
-                        <option value="today">📆 Hari Ini</option>
-                        <option value="week">📊 Minggu Ini</option>
-                        <option value="month">📈 Bulan Ini</option>
-                    </select>
-                </div>
-                <div class="flex items-end">
-                    <button class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                        </svg>
-                        Filter
-                    </button>
-                </div>
+                    <div class="flex-1">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rentang Tanggal</label>
+                        <select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white" name="tanggal_filter" onchange="filters()">
+                            <option value="all">📅 Semua Waktu</option>
+                            <option value="today">📆 Hari Ini</option>
+                            <option value="week">📊 Minggu Ini</option>
+                            <option value="month">📈 Bulan Ini</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl" onclick="filters()">
+                            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                            Filter
+                        </button>
+                    </div>
+                {{-- </form> --}}
             </div>
         </div>
 
@@ -175,7 +179,7 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-gray-200" id="riwayat-table-body">
                         @forelse ($riwayat as $r)
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -186,7 +190,7 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <div class="text-sm font-semibold text-gray-900">{{ $r->created_at->format('d F Y') }}</div>
+                                        <div class="text-sm font-semibold text-gray-900">{{ $r->created_at->translatedFormat('d F Y') }}</div>
                                         <div class="text-sm text-gray-600">{{ $r->created_at->format('H:i') }} WIB</div>
                                         <div class="text-xs text-gray-400">{{ $r->created_at->diffForHumans() }}</div>
                                     </div>
@@ -196,7 +200,7 @@
                                 <div class="flex items-center">
                                     <div class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></div>
                                     <div>
-                                        <div class="text-lg font-bold text-green-600">Rp{{ number_format($r->total_harga) }}</div>
+                                        <div class="text-lg font-bold text-green-600">Rp {{ number_format($r->total_harga) }}</div>
                                         <div class="text-xs text-gray-500">Transaksi Berhasil</div>
                                     </div>
                                 </div>
@@ -328,4 +332,125 @@ tbody tr:hover {
     border-radius: 10px;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/id.js"></script> --}}
+<script>
+    function filters() {
+        const adminFilter = document.querySelector('input[name="admin_filter"]').value;
+        const tanggalFilter = document.querySelector('select[name="tanggal_filter"]').value;
+        const token = document.querySelector('input[name="_token"]').value;
+
+        // let url = new URL(window.location.href);
+        $.ajax({
+            type: "get",
+            url: location.origin+"/owner/riwayat/filter",
+            data: {
+                admin_filter: adminFilter,
+                tanggal_filter: tanggalFilter,
+            },
+            dataType: "json",
+            success: function (response) {
+                console.log(response);
+
+                $("#riwayat-table-body").empty();
+                if (response.data.length != 0) {
+                    $.map(response.data, function (d, i) {
+                        var date = new Date(d.created_at);
+                        var dataDate = date.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                        var dataTime = date.toLocaleTimeString('id-ID', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                        });
+                        //  moment.locale('id');
+                        var dataTimeago = moment(d.created_at).fromNow();
+                        $("#riwayat-table-body").append(`
+                         <tr class="hover:bg-gray-50 transition-colors">
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-xl flex items-center justify-center mr-4">
+                                                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-semibold text-gray-900">${dataDate}</div>
+                                                <div class="text-sm text-gray-600">${dataTime} WIB</div>
+                                                <div class="text-xs text-gray-400">${dataTimeago}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-3 h-3 bg-green-400 rounded-full mr-3 animate-pulse"></div>
+                                            <div>
+                                                <div class="text-lg font-bold text-green-600">${new Intl.NumberFormat('id-ID', {style: 'currency',currency: 'IDR',minimumFractionDigits: 0}).format(d.total_harga)}</div>
+                                                <div class="text-xs text-gray-500">Transaksi Berhasil</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center mr-3">
+                                                <span class="text-white font-bold text-sm">${(d.user?.name || 'U').charAt(0)}</span>
+                                            </div>
+                                            <div>
+                                                <div class="text-sm font-medium text-gray-900">${d.user.name ?? 'Unknown Admin'}</div>
+                                                <div class="text-sm text-gray-500">Administrator</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center space-x-2">
+                                            <button class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-xs font-medium">
+                                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                </svg>
+                                                Detail
+                                            </button>
+                                            <button class="px-3 py-1 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-xs font-medium">
+                                                <svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H9.414a1 1 0 01-.707-.293l-2-2H4a2 2 0 00-2 2v7a2 2 0 002 2h2"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6l-3-3m0 0l-3 3m3-3v9"></path>
+                                                </svg>
+                                                Print
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                        `);
+                    });
+                } else {
+                    $("#riwayat-table-body").append(`
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Belum Ada Transaksi</h3>
+                                    <p class="text-gray-500">Riwayat transaksi admin akan muncul di sini</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                }
+
+            }
+        });
+
+        // url.searchParams.set('admin_filter', adminFilter);
+        // url.searchParams.set('tanggal_filter', tanggalFilter);
+
+        // window.location.href = url.toString();
+    }
+</script>
 @endsection

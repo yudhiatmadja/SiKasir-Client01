@@ -33,7 +33,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('transaksi.store') }}" class="space-y-6">
+        <form method="POST" action="{{ url('transaksi/'.$transaksi->id) }}" class="space-y-6">
             @csrf
 
             <div class="overflow-x-auto">
@@ -42,14 +42,13 @@
                         <tr>
                             <th class="text-left p-3 font-semibold text-gray-800">Produk</th>
                             <th class="text-left p-3 font-semibold text-gray-800">Kuantitas</th>
-                            <th class="text-left p-3 font-semibold text-gray-800">Kategori</th>
                             <th class="text-left p-3 font-semibold text-gray-800">Total</th>
                         </tr>
                     </thead>
                     <tfoot class="bg-white/60 backdrop-blur border-b border-gray-300">
                         <tr>
-                            <th colspan="3" class="text-right p-3 font-bold uppercase text-gray-800">Total : </th>
-                            <th class="text-left p-3 font-semibold text-gray-800" id="totalALL">Rp0</th>
+                            <th colspan="2" class="text-right p-3 font-semibold text-gray-800">Total</th>
+                            <th colspan="2" class="text-left p-3 font-semibold text-gray-800" id="totalALL">{{ $transaksi->total_harga }}</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -57,18 +56,15 @@
                         <tr class="hover:bg-white/40 transition">
                             <td class="p-3">
                                 <label class="inline-flex items-center space-x-2">
-                                    <input type="checkbox" name="produk_id[]" value="{{ $p->id }}" class="rounded border-gray-300 focus:ring-blue-500" onchange="count()">
+                                    <input type="checkbox" name="produk_id[]" value="{{ $p->id }}" @checked($transaksi->details->pluck('produk')->pluck('id')->contains($p->id)) class="rounded border-gray-300 focus:ring-blue-500" onchange="count()">
                                     <span>{{ $p->nama }} <span class="text-sm text-gray-500">(Rp{{ number_format($p->harga) }})</span></span>
                                 </label>
                             </td>
                             <td class="p-3">
-                                <input type="number" name="kuantitas[]" min="1" value="1" class="w-20 p-2 rounded-lg border-gray-300 focus:ring-blue-500 shadow-sm" onchange="count()">
+                                <input type="number" name="kuantitas[]" min="1" value="{{ $transaksi->details->firstWhere('produk_id', $p->id)?$transaksi->details->firstWhere('produk_id', $p->id)->kuantitas : 1 }}" class="w-20 p-2 rounded-lg border-gray-300 focus:ring-blue-500 shadow-sm" onchange="count()">
                             </td>
                             <td class="p-3">
-                                <span class="text-gray-800">{{ $p->kategori }}</span>
-                            </td>
-                            <td class="p-3">
-                                <span class="text-gray-800">Rp0</span>
+                                <span class="text-gray-800">Rp. {{ number_format($transaksi->details->firstWhere('produk_id', $p->id)?$transaksi->details->firstWhere('produk_id', $p->id)->subtotal:0) }}</span>
                             </td>
                         </tr>
                         @endforeach
@@ -78,7 +74,7 @@
 
             <div>
                 <label for="jumlah_bayar" class="block text-gray-800 font-medium mb-1">Jumlah Bayar</label>
-                <input type="number" name="jumlah_bayar" required class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 shadow-sm">
+                <input type="number" name="jumlah_bayar" required class="w-full p-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-400 shadow-sm" value="{{ number_format($transaksi->jumlah_bayar) }}" >
             </div>
 
             <div class="text-right">
@@ -91,8 +87,6 @@
             </div>
         </form>
     </div>
-
-
 
     <!-- Floating Elements -->
     <div class="absolute top-20 left-10 w-3 h-3 bg-blue-400 rounded-full animate-float opacity-60"></div>
@@ -133,7 +127,7 @@
         rows.forEach(row => {
             const checkbox = row.querySelector('input[type="checkbox"]');
             const quantityInput = row.querySelector('input[name="kuantitas[]"]');
-            const totalCell = row.querySelector('td:nth-child(4) span');
+            const totalCell = row.querySelector('td:nth-child(3) span');
 
             // Ambil harga dari teks (misal: "Produk 2 (Rp10)")
             const labelText = row.querySelector('label span').textContent;

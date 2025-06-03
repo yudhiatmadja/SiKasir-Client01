@@ -127,9 +127,9 @@
 
                             <!-- Stock Status Badge -->
                             <div class="absolute top-3 right-3">
-                                @if($p->stok > 10)
+                                @if($p->stok >= 10)
                                     <span class="px-2 py-1 bg-green-500 text-white text-xs rounded-lg font-medium shadow-lg">Stok Baik</span>
-                                @elseif($p->stok > 0)
+                                @elseif($p->stok >= 0)
                                     <span class="px-2 py-1 bg-yellow-500 text-white text-xs rounded-lg font-medium shadow-lg">Stok Rendah</span>
                                 @else
                                     <span class="px-2 py-1 bg-red-500 text-white text-xs rounded-lg font-medium shadow-lg">Habis</span>

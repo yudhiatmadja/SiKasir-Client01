@@ -47,7 +47,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="font-semibold text-gray-900">{{ Auth::user()->name }}</p>
+                            <p class="font-semibold text-gray-900">{{ implode(" ",array_slice(explode(' ', Auth::user()->name), 0, 2)) }}</p>
                             <p class="text-sm text-gray-500 capitalize">{{ Auth::user()->role }}</p>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('transaksi.create') }}" class="flex items-center space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-200 group {{ request()->routeIs('transaksi.*') ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200' : '' }}">
+                                    <a href="{{ route('transaksi.index') }}" class="flex items-center space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-200 group {{ request()->routeIs('transaksi.*') ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200' : '' }}">
                                         <div class="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
                                             <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -97,7 +97,7 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
                                             </svg>
                                         </div>
-                                        <span class="font-medium text-gray-700 group-hover:text-gray-900">Dashboard Owner</span>
+                                        <span class="font-medium text-gray-700 group-hover:text-gray-900">Dashboard</span>
                                     </a>
                                 </li>
                                 <li>
@@ -141,12 +141,13 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('admin.dashboard') }}" class="flex items-center space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-200 group">
+                                    <a href="{{ route('owner.admin.index') }}" class="flex items-center space-x-3 p-4 rounded-xl hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 transition-all duration-200 group {{ request()->routeIs('owner.admin.index') || request()->routeIs('owner.admin.create') || request()->routeIs('owner.admin.edit') ? 'bg-gradient-to-r from-indigo-50 to-blue-50 border border-indigo-200' : '' }}">
                                         <div class="p-2 bg-red-100 rounded-lg group-hover:bg-red-200 transition-colors">
-                                            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <svg class="w-5 h-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
                                             </svg>
+
+
                                         </div>
                                         <span class="font-medium text-gray-700 group-hover:text-gray-900">Kelola Admin</span>
                                     </a>

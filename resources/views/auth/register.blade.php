@@ -19,13 +19,32 @@
                     </svg>
                 </div>
                 <h1 class="text-2xl font-bold text-gray-900 mb-2">Selamat Datang</h1>
-                <p class="text-gray-600 text-sm">Masuk ke sistem kasir Anda</p>
+                <p class="text-gray-600 text-sm">Register ke sistem kasir Anda</p>
             </div>
 
             <!-- Form -->
             <div class="px-8 pb-8">
-                <form method="POST" action="/login" class="space-y-5">
+                <form method="POST" action="/register" class="space-y-5">
                     @csrf
+
+                    <!-- Username Field -->
+                    <div class="group">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                        <div class="relative">
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Masukkan nama Anda"
+                                required
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white hover:border-gray-400"
+                            >
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400 group-hover:text-gray-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Username Field -->
                     <div class="group">
@@ -81,18 +100,8 @@
                     </div>
                     @endif --}}
 
-                    <!-- Remember Me -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center text-sm text-gray-600 hover:text-gray-900 cursor-pointer">
-                            <input type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mr-2">
-                            <span>Ingat saya</span>
-                        </label>
-                        <a href="#" class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors">
-                            Lupa password?
-                        </a>
-                    </div>
 
-                    <!-- Login Button -->
+
                     <button
                         type="submit"
                         class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300/50"
@@ -101,17 +110,16 @@
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                             </svg>
-                            Masuk ke Sistem
+                            Daftar Akun
                         </span>
                     </button>
                 </form>
-                <div class="flex item-center justify-center mt-3">
+                <!-- Remember Me -->
                     <div class="flex items-center justify-center mt-3">
-                        <a href="/register" class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors">
-                            Belum memiliki akun?
+                        <a href="/login" class="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors">
+                            Sudah punya Akun?
                         </a>
                     </div>
-                </div>
             </div>
         </div>
 

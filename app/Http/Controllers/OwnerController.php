@@ -67,4 +67,48 @@ class OwnerController extends Controller
         $riwayat = Transaksi::with('user')->orderBy('created_at', 'desc')->get();
         return view('owner.riwayat', compact('riwayat'));
     }
+
+    public function riwayat_filter(Request $request)
+    {
+        $admin_filter = $request->input('admin_filter');
+        $tanggal_filter = $request->input('tanggal_filter');
+
+        $data = null;
+        // dd($dataAdmin);
+
+        switch($tanggal_filter){
+            case "all":
+                $data = Transaksi::with('user')->whereHas('user', function($query) use ($admin_filter) {
+                            $query->where('name', 'like', '%' . $admin_filter . '%');
+                        })->orderBy('created_at', 'desc')->get();
+                break;
+            case "today":
+                $data = Transaksi::with('user')->where("created_at", Carbon::today())->whereHas('user', function($query) use ($admin_filter) {
+                            $query->where('name', 'like', '%' . $admin_filter . '%');
+                        })->orderBy('created_at', 'desc')->get();
+                break;
+            case "week":
+                $data = Transaksi::with('user')->whereBetween('created_at', [
+                            Carbon::now()->startOfWeek(),
+                            Carbon::now()->endOfWeek()
+                        ])->whereHas('user', function($query) use ($admin_filter) {
+                            $query->where('name', 'like', '%' . $admin_filter . '%');
+                        })->orderBy('created_at', 'desc')->get();
+                break;
+            case "month":
+                $data = Transaksi::with('user')->whereBetween('created_at', [
+                            Carbon::now()->startOfMonth(),
+                            Carbon::now()->endOfMonth()
+                        ])->whereHas('user', function($query) use ($admin_filter) {
+                            $query->where('name', 'like', '%' . $admin_filter . '%');
+                        })->orderBy('created_at', 'desc')->get();
+                break;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Filter applied successfully',
+            'data' => $data,
+        ]);
+    }
 }
