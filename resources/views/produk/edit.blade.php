@@ -99,9 +99,20 @@
                                 </svg>
                                 Kategori
                             </label>
-                            <input type="text" name="kategori" value="{{ $produk->kategori }}"
+                            {{-- <input type="text" name="kategori" value="{{ $produk->kategori }}"
                                 class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                placeholder="Kategori produk">
+                                placeholder="Kategori produk"> --}}
+
+                            <input type="text" name="kategori" class="mt-1 w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="kategori_input">
+                            <select name="kategori_choose" class="mt-5 w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="kategori_choose" onclick="categories_choose()">
+                                <option value="">Pilih Kategori</option>
+                                @foreach ($kategori as $item)
+                                    <option value="{{ $item }}" @if ($produk->kategori == $item) selected @endif>{{ $item}}</option>
+                                @endforeach
+                                {{-- <option value="Makanan">Makanan</option>
+                                <option value="Elektronik">Elektronik</option>
+                                <option value="Pakaian">Pakaian</option> --}}
+                            </select>
                         </div>
                     </div>
 
@@ -231,6 +242,24 @@ function previewImage(input) {
             document.getElementById('preview-img').src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
+    }
+}
+function categories() {
+    var kategoriInput = '#kategori_input';
+    var kategoriSelect = '#kategori_choose';
+    $(kategoriSelect).attr("disabled", "true");
+    if ($(kategoriInput).val() == "") {
+        $(kategoriSelect).removeAttr("disabled");
+
+    }
+}
+function categories_choose() {
+    var kategoriInput = '#kategori_input';
+    var kategoriSelect = '#kategori_choose';
+    $(kategoriInput).attr("disabled", "true");
+    if ($(kategoriSelect).val() == "") {
+        $(kategoriInput).removeAttr("disabled");
+
     }
 }
 </script>

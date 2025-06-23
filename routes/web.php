@@ -33,6 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/transaksi/{transaksi}/edit', [TransaksiController::class, 'edit'])->name('transaksi.edit');
     Route::get('/transaksi/{transaksi}/delete', [TransaksiController::class, 'destroy']);
     Route::post('/transaksi/{transaksi}', [TransaksiController::class, 'update']);
+    Route::get('/transaksi/search', [TransaksiController::class, 'search_transaksi']);
+    Route::get('/produk/search', [TransaksiController::class, 'search_produk']);
+
     Route::resource('produk', ProdukController::class);
 });
 
@@ -45,6 +48,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/{admin}/edit', [AdminController::class, 'edit'])->name('edit');
     Route::put('/{admin}', [AdminController::class, 'update'])->name('update');
     Route::delete('/{admin}', [AdminController::class, 'destroy'])->name('destroy');
+
 });
 
 

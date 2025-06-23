@@ -31,7 +31,13 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                <input type="text" name="kategori" class="mt-1 w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400">
+                <input type="text" name="kategori" class="mt-1 w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="kategori_input" onchange="categories()" >
+                <select name="kategori_choose" class="mt-5 w-full px-4 py-2 rounded-xl bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="kategori_choose" onclick="categories_choose()" >
+                    <option value="">Pilih Kategori</option>
+                    @foreach ($kategori as $item)
+                        <option value="{{ $item }}">{{ $item}}</option>
+                    @endforeach
+                </select>
             </div>
 
             <div>
@@ -91,4 +97,40 @@
     animation-delay: 4s;
 }
 </style>
+<script>
+        function categories() {
+            var kategoriInput = '#kategori_input';
+            var kategoriSelect = '#kategori_choose';
+            $(kategoriSelect).attr("disabled", "true");
+            if ($(kategoriInput).val() == "") {
+                $(kategoriSelect).removeAttr("disabled");
+
+            }
+        }
+        function categories_choose() {
+            var kategoriInput = '#kategori_input';
+            var kategoriSelect = '#kategori_choose';
+            $(kategoriInput).attr("disabled", "true");
+            if ($(kategoriSelect).val() == "") {
+                $(kategoriInput).removeAttr("disabled");
+
+            }
+        }
+    </script>
 @endsection
+{{-- @section('js')
+    <script>
+        // $(document).ready(function () {
+        //     kategori();
+        // });
+        // setTimeout(() => {
+        //     kategori();
+        // }, 500);
+        function kategori() {
+            alert("Kategori telah dipilih");
+            // var kategoriInput = document.querySelector('input[name="kategori"]');
+            // var kategoriSelect = document.querySelector('select[name="kategori_choose"]');
+            // $('select[name="kategori_choose"]').attr("disabled", "true");
+        }
+    </script>
+@endsection --}}

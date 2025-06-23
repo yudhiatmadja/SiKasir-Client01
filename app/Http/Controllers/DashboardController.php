@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Produk;
 use App\Models\Transaksi;
 use App\Models\User;
 use Carbon\Carbon;
@@ -17,12 +18,16 @@ class DashboardController extends Controller
 
     public function index()
     {
-        // $admins = User::where('role', 'admin')->orderBy('name')->get();
         $hariIni = Carbon::today();
         $transaksiHariIni = Transaksi::whereDate('created_at', $hariIni)->where("user_id", Auth::user()->id)->count();
-        $pendapatan = Transaksi::whereDate('created_at', $hariIni)->where('user_id', Auth::user()->id)->sum('total_harga');
 
-        return view('dashboard_admin.index', compact('transaksiHariIni', 'pendapatan'));
+        $jumlahStokBanyak = Produk::max("stok");
+        $produkStokTerbanyak = Produk::where("stok", $jumlahStokBanyak)->first();
+
+        $jumlahStokRendah = Produk::min("stok");
+        $produkStokTerendah = Produk::where("stok", $jumlahStokRendah)->first();
+
+        return view('dashboard_admin.index', compact('transaksiHariIni', 'produkStokTerbanyak', 'produkStokTerendah'));
     }
 
     public function create()

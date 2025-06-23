@@ -26,6 +26,17 @@
 
     <div class="relative max-w-4xl mx-auto bg-white/60 backdrop-blur-xl p-8 rounded-2xl shadow-xl border border-white/30">
         <h2 class="text-3xl font-bold text-gray-900 mb-6">Transaksi Penjualan</h2>
+        <div class="flex">
+            <select name="kategori_choose" class="w-50 p-2 rounded-lg m-2 bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="kategori_choose" onclick="search_categories()">
+                <option value="">Pilih Kategori Produk </option>
+                @foreach ($kategori as $item)
+                    <option value="{{ $item }}">{{ $item}}</option>
+                @endforeach
+                {{-- <option value="Makanan">Makanan</option>
+                <option value="Elektronik">Elektronik</option>
+                <option value="Pakaian">Pakaian</option> --}}
+            </select>
+        </div>
 
         @if (session('success'))
             <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg shadow">
@@ -33,7 +44,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('transaksi.store') }}" class="space-y-6">
+        <form method="POST" action="{{ route('transaksi.store') }}" class="space-y-6" id="transaksi-form">
             @csrf
 
             <div class="overflow-x-auto">
@@ -43,6 +54,7 @@
                             <th class="text-left p-3 font-semibold text-gray-800">Produk</th>
                             <th class="text-left p-3 font-semibold text-gray-800">Kuantitas</th>
                             <th class="text-left p-3 font-semibold text-gray-800">Kategori</th>
+                            <th class="text-left p-3 font-semibold text-gray-800">Stok</th>
                             <th class="text-left p-3 font-semibold text-gray-800">Total</th>
                         </tr>
                     </thead>
@@ -52,7 +64,7 @@
                             <th class="text-left p-3 font-semibold text-gray-800" id="totalALL">Rp0</th>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody id="produk-list" class="divide-y divide-gray-200">
                         @foreach ($produks as $p)
                         <tr class="hover:bg-white/40 transition">
                             <td class="p-3">
@@ -66,6 +78,10 @@
                             </td>
                             <td class="p-3">
                                 <span class="text-gray-800">{{ $p->kategori }}</span>
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">{{ $p->stok }}</span>
+                                <input type="hidden" value="{{ $p->stok }}" id="inputStok">
                             </td>
                             <td class="p-3">
                                 <span class="text-gray-800">Rp0</span>
@@ -82,7 +98,7 @@
             </div>
 
             <div class="text-right">
-                <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                <button type="submit" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105" onclick="sbumit()">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
@@ -119,13 +135,48 @@
 .animate-float-slow { animation: float-slow 10s ease-in-out infinite; animation-delay: 4s; }
 </style>
 <script>
-    document.getElementById('transaksi-form').addEventListener('submit', function(event) {
-        const checkboxes = document.querySelectorAll('input[name="produk_id[]"]:checked');
-        if (checkboxes.length === 0) {
-            event.preventDefault();
-            alert('Pilih minimal satu produk untuk transaksi.');
-        }
-    });
+    function search_categories() {
+        const kategori = document.getElementById('kategori_choose').value;
+        $.ajax({
+            type: "get",
+            url: location.origin+"/produk/search",
+            data: {
+                kategori: kategori
+            },
+            dataType: "JSON",
+            success: function (response) {
+
+                $("#produk-list").empty();
+                $.map(response.produk, function (e, i) {
+                    // console.log(e.nama);
+                    $("#produk-list").append(`
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="p-3">
+                                <label class="inline-flex items-center space-x-2">
+                                    <input type="checkbox" name="produk_id[]" value="${e.id}" class="rounded border-gray-300 focus:ring-blue-500" onchange="count()">
+                                    <span>${ e.nama } <span class="text-sm text-gray-500">(Rp${e.harga})</span></span>
+                                </label>
+                            </td>
+                            <td class="p-3">
+                                <input type="number" name="kuantitas[]" min="1" value="1" class="w-20 p-2 rounded-lg border-gray-300 focus:ring-blue-500 shadow-sm" onchange="count()">
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">${e.kategori}</span>
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">${e.stok}</span>
+                                <input type="hidden" value="${e.stok}" id="inputStok">
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">Rp0</span>
+                            </td>
+                        </tr>
+                    `);
+                });
+
+            }
+        });
+    }
     function count() {
         const rows = document.querySelectorAll('tbody tr');
         let totalAll = 0;
@@ -133,7 +184,8 @@
         rows.forEach(row => {
             const checkbox = row.querySelector('input[type="checkbox"]');
             const quantityInput = row.querySelector('input[name="kuantitas[]"]');
-            const totalCell = row.querySelector('td:nth-child(4) span');
+            const totalCell = row.querySelector('td:nth-child(5) span');
+            const totalStok = row.querySelector('#inputStok');
 
             // Ambil harga dari teks (misal: "Produk 2 (Rp10)")
             const labelText = row.querySelector('label span').textContent;
@@ -146,6 +198,15 @@
                 const total = harga * qty;
                 totalCell.textContent = `Rp${total.toLocaleString()}`;
                 totalAll += total;
+
+                if (Number(qty) <= Number(totalStok.value)) {
+                    totalCell.classList.remove('text-red-500');
+                    totalCell.classList.add('text-gray-800');
+                } else {
+                    totalCell.classList.add('text-red-500');
+                    totalCell.textContent = 'Stok tidak cukup';
+
+                }
             } else {
                 totalCell.textContent = 'Rp0';
             }
@@ -166,7 +227,7 @@
             count();
         });
     });
-    docuemt.querySelectorAll('#input').forEach(input => {
+    document.querySelectorAll('#input').forEach(input => {
         input.addEventListener('input', function() {
             if (this.value < 1) {
                 this.value = 1;

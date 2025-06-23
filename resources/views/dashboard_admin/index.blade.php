@@ -34,14 +34,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
                     </div>
-                    <div class="text-right">
-                        <div class="flex items-center text-green-500 text-sm font-medium">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                            </svg>
-                            +12%
-                        </div>
-                    </div>
                 </div>
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-1">Transaksi Hari Ini</p>
@@ -58,19 +50,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                         </svg>
                     </div>
-                    <div class="text-right">
-                        <div class="flex items-center text-green-500 text-sm font-medium">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                            </svg>
-                            +8%
-                        </div>
-                    </div>
                 </div>
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-1">Pendapatan Hari Ini</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1">Rp{{ number_format($pendapatan) }}</p>
-                    <p class="text-xs text-gray-500">dari kemarin</p>
+                    <p class="text-gray-600 text-sm font-medium mb-1">Produk Stok Terbanyak</p>
+                    <p class="text-3xl font-bold text-gray-900 mb-1 uppercase">{{ $produkStokTerbanyak->nama }}</p>
+                    <p class="text-xs text-gray-500">Kategori : {{ $produkStokTerbanyak->kategori }}</p>
                 </div>
             </div>
 
@@ -82,19 +66,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                         </svg>
                     </div>
-                    <div class="text-right">
-                        <div class="flex items-center text-green-500 text-sm font-medium">
-                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                            </svg>
-                            +5%
-                        </div>
-                    </div>
                 </div>
                 <div>
-                    <p class="text-gray-600 text-sm font-medium mb-1">Rata-rata Per Transaksi</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1">Rp{{ $transaksiHariIni > 0 ? number_format($pendapatan / $transaksiHariIni) : '0' }}</p>
-                    <p class="text-xs text-gray-500">nilai rata-rata</p>
+                    <p class="text-gray-600 text-sm font-medium mb-1">Produk Stok Terendah</p>
+                    <p class="text-3xl font-bold text-gray-900 mb-1">{{ $produkStokTerendah->nama }}</p>
+                    <p class="text-xs text-gray-500">Kategori : {{ $produkStokTerendah->kategori }}</p>
                 </div>
             </div>
 

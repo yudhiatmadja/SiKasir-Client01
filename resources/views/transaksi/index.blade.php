@@ -45,6 +45,15 @@
         @endif --}}
 
             <div class="overflow-x-auto">
+                <div class="flex">
+
+                    <select name="kategori_choose" class="w-50 p-2 rounded-lg m-2 bg-white/70 border border-gray-200 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-400" id="searchPriode" onclick="periode_search()">
+                        <option value="">Pilih Priode Transaksi</option>
+                        <option value="harian">Harian</option>
+                        <option value="bulanan">Bulanan</option>
+                        <option value="tahunan">Tahunan</option>
+                    </select>
+                </div>
                 <table class="w-full table-auto border-collapse border border-gray-200 rounded-lg shadow-sm p-3">
                     <thead class="bg-white/60 backdrop-blur border-b border-gray-300 text-center">
                         <tr>
@@ -56,7 +65,7 @@
                             <th class="text-left p-3 font-semibold text-gray-800">Total Di Terima</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="transaksiTable" class="text-center">
                         @foreach ($transaksis as $t)
                         <tr class="hover:bg-black/10 transition">
                             <td class="p-3">
@@ -110,14 +119,50 @@
 .animate-float-delayed { animation: float-delayed 8s ease-in-out infinite; animation-delay: 2s; }
 .animate-float-slow { animation: float-slow 10s ease-in-out infinite; animation-delay: 4s; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
 <script>
-    document.getElementById('transaksi-form').addEventListener('submit', function(event) {
-        const checkboxes = document.querySelectorAll('input[name="produk_id[]"]:checked');
-        if (checkboxes.length === 0) {
-            event.preventDefault();
-            alert('Pilih minimal satu produk untuk transaksi.');
-        }
-    });
+    function periode_search(){
+        const searchPriode = $("#searchPriode").val();
+        $.ajax({
+            type: "get",
+            url: location.origin+"/transaksi/search",
+            data: {
+                search: searchPriode
+            },
+            dataType: "JSON",
+            success: function (response) {
+                $("#transaksiTable").empty();
+                $.map(response.transaksi, function (e, i) {
+                    var date = new Date(e.created_at);
+                    var dataDate = date.toLocaleDateString('sv-SE');
+                    var dataDateTime = date.toLocaleTimeString('it-IT', { hour12: false });
+                    $("#transaksiTable").append(`
+                        <tr class="hover:bg-black/10 transition">
+                            <td class="p-3">
+                                ${i + 1}
+                            </td>
+                            <td class="p-3">
+                                <span>${dataDate} ${dataDateTime}</span>
+                            </td>
+                            <td class="p-3">
+                                <span>${new Intl.NumberFormat('id-ID').format(e.total_harga)}</span>
+                            </td>
+                            <td class="p-3">
+                                ${new Intl.NumberFormat('id-ID').format(e.jumlah_bayar)}
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">${new Intl.NumberFormat('id-ID').format(e.kembalian)}</span>
+                            </td>
+                            <td class="p-3">
+                                <span class="text-gray-800">${(e.jumlah_bayar - e.kembalian)}</span>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
+        });
+    }
+
     function count() {
         const rows = document.querySelectorAll('tbody tr');
         let totalAll = 0;
@@ -158,7 +203,7 @@
             count();
         });
     });
-    docuemt.querySelectorAll('#input').forEach(input => {
+    document.querySelectorAll('#input').forEach(input => {
         input.addEventListener('input', function() {
             if (this.value < 1) {
                 this.value = 1;

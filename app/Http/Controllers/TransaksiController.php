@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Produk;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Date;
 
 class TransaksiController extends Controller
 {
@@ -19,8 +21,11 @@ class TransaksiController extends Controller
 
     public function create()
     {
+        $kategori = Produk::pluck('kategori')
+            ->countBy()
+            ->keys();
         $produks = Produk::where('stok', '>', 0)->get();
-        return view('transaksi.create', compact('produks'));
+        return view('transaksi.create', compact('produks', 'kategori'));
     }
 
     public function store(Request $request)
@@ -237,4 +242,59 @@ class TransaksiController extends Controller
         $transaksi->delete();
         return redirect("/transaksi")->with('success', 'Transaksi berhasil dihapus!');
     }
+
+    public function search_produk(Request $request)
+    {
+        return response()->json([
+            'produk' => Produk::where('kategori', $request->kategori)->get(),
+            // 'transaksi' => $request->kategori
+        ]);
+    }
+
+    public function search_transaksi(Request $request)
+    {
+        $response = null;
+        $date = null;
+        if ($request->search == null) {
+            $response = Transaksi::where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+        } else if($request->search != null) {
+            switch ($request->search) {
+                case 'harian':
+                    $date = Carbon::now()->today();
+                     $response = Transaksi::whereDate('created_at', $date)
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+                    break;
+                case 'bulanan':
+                    $date = Carbon::now()->month;
+                    $response = Transaksi::whereMonth('created_at', $date)
+                    ->where('user_id', Auth::id())
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+                    break;
+                case 'tahunan':
+                    $date = Carbon::now()->year;
+                    $response = Transaksi::whereYear('created_at', $date)
+                        ->where('user_id', Auth::id())
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+        }
+
+        return response()->json([
+            'transaksi' => $response,
+        ]);
+        // return response()->json([
+        //     'transaksi' => $response
+        // ]);
+    }
+
 }
