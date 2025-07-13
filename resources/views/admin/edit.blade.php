@@ -26,7 +26,7 @@
     <div class="relative z-10 max-w-xl mx-auto bg-white/60 backdrop-blur-xl p-8 rounded-2xl shadow-xl border border-white/30">
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Edit Admin</h1>
 
-        <form action="{{ route('admin.update', $admin) }}" method="POST" class="space-y-5">
+        <form action="{{ route('owner.admin.update', $admin) }}" method="POST" class="space-y-5">
             @csrf
             @method('PUT')
 

@@ -36,7 +36,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.store') }}" method="POST" class="space-y-6">
+        <form action="{{ route('owner.admin.store') }}" method="POST" class="space-y-6">
             @csrf
 
             <div>

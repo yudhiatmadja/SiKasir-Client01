@@ -18,9 +18,6 @@ class ProdukController extends Controller
     {
         $kategori = Produk::pluck('kategori')
             ->countBy()
-            ->filter(function ($count) {
-                return $count > 1;
-            })
             ->keys();
         return view('produk.create', compact('kategori'));
     }

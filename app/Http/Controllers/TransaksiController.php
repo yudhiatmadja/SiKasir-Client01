@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RiwayatTransaksiExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -10,6 +11,7 @@ use App\Models\DetailTransaksi;
 use App\Models\Produk;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TransaksiController extends Controller
 {
@@ -295,6 +297,10 @@ class TransaksiController extends Controller
         // return response()->json([
         //     'transaksi' => $response
         // ]);
+    }
+    public function export_excel()
+    {
+        return Excel::download(new RiwayatTransaksiExport, 'riwayat_transaksi.xlsx');
     }
 
 }

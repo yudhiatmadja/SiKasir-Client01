@@ -60,6 +60,7 @@ Route::middleware(['auth', 'owner'])->prefix('owner')->name('owner.')->group(fun
     Route::get('/stok', [OwnerController::class, 'stok'])->name('stok');
     Route::get('/riwayat', [OwnerController::class, 'riwayat'])->name('riwayat');
     Route::get('/riwayat/filter', [OwnerController::class, 'riwayat_filter']);
+    Route::get('/riwayat/export', [TransaksiController::class, 'export_excel']);
 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/create', [AdminController::class, 'create'])->name('admin.create');

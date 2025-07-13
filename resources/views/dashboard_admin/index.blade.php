@@ -53,8 +53,8 @@
                 </div>
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-1">Produk Stok Terbanyak</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1 uppercase">{{ $produkStokTerbanyak->nama }}</p>
-                    <p class="text-xs text-gray-500">Kategori : {{ $produkStokTerbanyak->kategori }}</p>
+                    <p class="text-3xl font-bold text-gray-900 mb-1 uppercase">{{ ($produkStokTerbanyak != null) ? $produkStokTerbanyak->nama : 'Tidak Ada Produk' }}</p>
+                    <p class="text-xs text-gray-500">Kategori : {{ ($produkStokTerbanyak != null) ? $produkStokTerbanyak->kategori : 'Tidak Ada Produk' }}</p>
                 </div>
             </div>
 
@@ -69,8 +69,8 @@
                 </div>
                 <div>
                     <p class="text-gray-600 text-sm font-medium mb-1">Produk Stok Terendah</p>
-                    <p class="text-3xl font-bold text-gray-900 mb-1">{{ $produkStokTerendah->nama }}</p>
-                    <p class="text-xs text-gray-500">Kategori : {{ $produkStokTerendah->kategori }}</p>
+                    <p class="text-3xl font-bold text-gray-900 mb-1 uppercase">{{ ($produkStokTerendah != null) ? $produkStokTerendah->nama : 'Tidak Ada Produk' }}</p>
+                    <p class="text-xs text-gray-500">Kategori : {{ ($produkStokTerendah != null) ? $produkStokTerendah->kategori : 'Tidak Ada Produk'}}</p>
                 </div>
             </div>
 

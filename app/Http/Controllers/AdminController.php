@@ -36,7 +36,7 @@ class AdminController extends Controller
             'role'     => 'admin',
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Admin berhasil ditambahkan');
+        return redirect()->route('owner.admin.index')->with('success', 'Admin berhasil ditambahkan');
     }
 
     public function edit(User $admin)
@@ -59,12 +59,12 @@ class AdminController extends Controller
         }
         $admin->save();
 
-        return redirect()->route('admin.index')->with('success', 'Admin diperbarui');
+        return redirect()->route('owner.admin.index')->with('success', 'Admin diperbarui');
     }
 
     public function destroy(User $admin)
     {
         $admin->delete();
-        return redirect()->route('admin.index')->with('success', 'Admin dihapus');
+        return redirect()->route('owner.admin.index')->with('success', 'Admin dihapus');
     }
 }
